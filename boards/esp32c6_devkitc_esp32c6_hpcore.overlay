@@ -1,167 +1,31 @@
-/*
- * boards/esp32c6_devkitc_esp32c6_hpcore.overlay
- *
- * Hardware mapping:
- *
- *  ESP32-C6 GPIO  | Signal            | Peripheral
- *  ---------------+-------------------+--------------------
- *  GPIO6          | SPI2 SCK          | ILI9341 + XPT2046
- *  GPIO7          | SPI2 MOSI         | ILI9341 + XPT2046
- *  GPIO2          | SPI2 MISO         | ILI9341 + XPT2046
- *  GPIO18         | CS0 (active-low)  | ILI9341 display
- *  GPIO8          | DC/RS             | ILI9341
- *  GPIO10         | RESET (active-low)| ILI9341
- *  GPIO11         | LED backlight     | ILI9341 (GPIO, active-high)
- *  GPIO19         | CS1 (active-low)  | XPT2046 touch
- *  GPIO21         | T_IRQ             | XPT2046 touch interrupt
- *  GPIO22         | I2C0 SDA          | SGP30
- *  GPIO23         | I2C0 SCL          | SGP30
- *
- * Console: ESP32-C6 native USB port (USB Serial/JTAG) via &usb_serial.
- * The USB-UART bridge port (GPIO16/17) is left available but unused.
- *
- * Pinctrl naming:
- *   The board DTS (esp32c6_devkitc_hpcore-pinctrl.dtsi) already defines
- *   labels spim2_default and i2c0_default. We must use different names
- *   to avoid duplicate-label DTS errors:
- *     spim2_app   — our SPI2 pinctrl (GPIO2/6/7)
- *     i2c0_sgp30  — our I2C0 pinctrl (GPIO22/23)
- */
-
 #include <zephyr/dt-bindings/pinctrl/esp32c6-pinctrl.h>
 
-/* ── chosen ─────────────────────────────────────────────────────────────── */
 / {
-	chosen {
-		zephyr,display    = &ili9341;
-		zephyr,touch      = &xpt2046;
-		/* Route console to native USB (USB Serial/JTAG) */
-		zephyr,console    = &usb_serial;
-		zephyr,shell-uart = &usb_serial;
-	};
-
-	/* Route XPT2046 events to LVGL's pointer input system */
-	lvgl_pointer {
-		compatible = "zephyr,lvgl-pointer-input";
-		input = <&xpt2046>;
-	};
-
-	/* Backlight driven as plain GPIO11 output in main.c */
+  chosen {
+    zephyr,console    = &usb_serial;
+    zephyr,shell-uart = &usb_serial;
+  };
 };
 
-/* ── Pinctrl ─────────────────────────────────────────────────────────────── */
-&pinctrl {
-	/*
-	 * SPI2 pinctrl for display + touch.
-	 * Named spim2_app to avoid conflict with the board's spim2_default.
-	 */
-	spim2_app: spim2_app {
-		group1 {
-			pinmux = <SPIM2_MOSI_GPIO7>,
-			         <SPIM2_SCLK_GPIO6>;
-			output-enable;
-		};
-		group2 {
-			pinmux = <SPIM2_MISO_GPIO2>;
-			input-enable;
-			bias-pull-up;
-		};
-	};
-
-	/*
-	 * I2C0 pinctrl for SGP30 on GPIO22/23.
-	 * Named i2c0_sgp30 to avoid conflict with the board's i2c0_default.
-	 */
-	i2c0_sgp30: i2c0_sgp30 {
-		group1 {
-			pinmux = <I2C0_SDA_GPIO22>,
-			         <I2C0_SCL_GPIO23>;
-			bias-pull-up;
-			drive-open-drain;
-			output-enable;
-		};
-	};
-};
-
-/* ── SPI2: ILI9341 (display) + XPT2046 (touch) ──────────────────────────── */
-&spi2 {
-	/* Override the board's default pinctrl with our GPIO2/6/7 assignment */
-	pinctrl-0 = <&spim2_app>;
-	pinctrl-names = "default";
-
-	cs-gpios = <&gpio0 18 GPIO_ACTIVE_LOW>,   /* ILI9341  (reg=0) */
-	           <&gpio0 19 GPIO_ACTIVE_LOW>;   /* XPT2046  (reg=1) */
-
-	ili9341: ili9341@0 {
-		compatible = "ilitek,ili9341";
-		reg = <0>;
-		spi-max-frequency = <20000000>;
-
-		reset-gpios    = <&gpio0 10 GPIO_ACTIVE_LOW>;
-		cmd-data-gpios = <&gpio0  8 GPIO_ACTIVE_LOW>;
-
-		/* Landscape 320x240 */
-		pixel-format = <0>;   /* PIXEL_FORMAT_RGB_565 */
-		rotation = <90>;
-		width  = <320>;
-		height = <240>;
-
-		/*
-		 * ILI9341 init register values — required by Zephyr 4.x binding.
-		 * The driver no longer hardcodes these; they must be in DTS.
-		 * Values are standard for the MSP2807 / generic ILI9341 module.
-		 */
-		pwctrla      = [39 2c 00 34 02];
-		pwctrlb      = [00 c1 30];
-		timctrla     = [85 00 78];
-		timctrlb     = [00 00];
-		pwseqctrl    = [64 03 12 81];
-		pumpratioctrl = [20];
-		disctrl      = [08 82 27];
-		vmctrl1      = [45 15];
-		vmctrl2      = [90];
-		enable3g     = [00];
-		etmod        = [07];
-		ifctl        = [01 00 06];
-		ifmode       = [c2];
-		gamset       = [01];
-		frmctr1      = [00 1b];
-		pwctrl1      = [10];
-		pwctrl2      = [10];
-		pgamctrl     = [0f 29 24 0c 0e 09 4e 78 3c 09 13 05 17 11 00];
-		ngamctrl     = [00 16 1b 04 11 07 31 33 42 05 0c 0a 28 2f 0f];
-	};
-
-	xpt2046: xpt2046@1 {
-		compatible = "xptek,xpt2046";
-		reg = <1>;
-		spi-max-frequency = <2000000>;
-
-		int-gpios = <&gpio0 21 GPIO_ACTIVE_LOW>;
-
-		touchscreen-size-x = <320>;
-		touchscreen-size-y = <240>;
-		min-x = <0>;
-		min-y = <0>;
-		max-x = <4000>;
-		max-y = <4000>;
-	};
-};
-
-/* ── I2C0: SGP30 (address 0x58, fixed by hardware) ──────────────────────── */
-&i2c0 {
-	/* Override board pinctrl to use GPIO22/23 */
-	pinctrl-0 = <&i2c0_sgp30>;
-	pinctrl-names = "default";
-	clock-frequency = <I2C_BITRATE_STANDARD>;
-
-	sgp30: sgp30@58 {
-		compatible = "sensirion,sgp30";
-		reg = <0x58>;
-	};
-};
-
-/* ── USB Serial/JTAG console ─────────────────────────────────────────────── */
 &usb_serial {
-	status = "okay";
+  status = "okay";
+};
+
+&pinctrl {
+  i2c0_default: i2c0_default {
+    group1 {
+      pinmux = <I2C0_SDA_GPIO22>,
+                     <I2C0_SCL_GPIO23>;
+      bias-pull-up;
+      drive-open-drain;
+      output-high;
+    };
+  };
+};
+
+&i2c0 {
+  status = "okay";
+  clock-frequency = <I2C_BITRATE_STANDARD>;
+  pinctrl-0 = <&i2c0_default>;
+  pinctrl-names = "default";
 };
