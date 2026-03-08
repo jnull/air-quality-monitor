@@ -1,0 +1,21 @@
+manifest:
+  name: air-quality-monitor
+
+  self:
+    path: air-quality-monitor
+
+  remotes:
+    - name: zephyrproject-rtos
+      url-base: https://github.com/zephyrproject-rtos
+
+  projects:
+    - name: zephyr
+      remote: zephyrproject-rtos
+      # Pin to a specific stable release. Update as needed.
+      revision: v3.7.0
+      # Importing zephyr's own west.yml pulls in all required modules:
+      # hal_espressif, lvgl, mbedtls, mcuboot, openthread, etc.
+      import: true
+
+  defaults:
+    remote: zephyrproject-rtos

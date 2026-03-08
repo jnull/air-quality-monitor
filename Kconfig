@@ -1,0 +1,26 @@
+mainmenu "Air Quality Monitor"
+
+config APP_SGP30_WARMUP_S
+	int "SGP30 sensor warmup time in seconds"
+	default 15
+	help
+	  The SGP30 needs at least 15 seconds of warmup before eCO2 and TVOC
+	  readings are reliable. During this period the UI shows a warming-up
+	  screen and the sensor is still commanded at 1 Hz (required by the chip).
+
+config APP_SENSOR_POLL_MS
+	int "Sensor polling interval in milliseconds"
+	default 1000
+	help
+	  How often the SGP30 is read. The SGP30 datasheet mandates exactly
+	  1-second intervals for its on-chip baseline algorithm; do not set
+	  this below 1000.
+
+config APP_UI_REFRESH_MS
+	int "LVGL UI refresh interval in milliseconds"
+	default 100
+	help
+	  How often lv_timer_handler() is called. 100 ms (10 FPS) is
+	  sufficient for a data-display application.
+
+source "Kconfig.zephyr"
