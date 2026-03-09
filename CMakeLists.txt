@@ -5,4 +5,8 @@ project(air_quality_monitor VERSION 0.1.0)
 target_sources(app PRIVATE
     src/main.c
     src/sgp30.c
+    src/ui/ui.c
 )
+
+# EEZ Studio generates files into src/ui/ — make it includable
+target_include_directories(app PRIVATE src/ui)
