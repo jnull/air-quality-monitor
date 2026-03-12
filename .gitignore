@@ -56,5 +56,4 @@ dkms.conf
 
 build/
 build.log
-project_state.md
-project_state_v2.md
+project_state*.md

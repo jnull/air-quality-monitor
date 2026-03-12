@@ -1,35 +1,36 @@
 #include "ui.h"
-#include <lvgl.h>
-#include <zephyr/logging/log.h>
+#include "screens.h"
+#include "images.h"
+#include "actions.h"
+#include "vars.h"
 
-LOG_MODULE_REGISTER(ui, LOG_LEVEL_INF);
+#include <string.h>
 
-void ui_init(void)
+static int16_t currentScreen = -1;
+
+static lv_obj_t *getLvglObjectFromIndex(int32_t index)
 {
-  printk("ui_init entered\n");
-
-  lv_obj_t *scr = lv_scr_act();
-  printk("lv_scr_act done: %p\n", (void *)scr);
-
-  if (scr == NULL)
-  {
-    printk("ERROR: active screen is NULL\n");
-    return;
-  }
-
-  /* Bright green background — unmistakable if LVGL is flushing */
-  lv_obj_set_style_bg_color(scr, lv_color_hex(0x00FF00), LV_PART_MAIN);
-  lv_obj_set_style_bg_opa(scr, LV_OPA_COVER, LV_PART_MAIN);
-
-  lv_obj_t *label = lv_label_create(scr);
-  lv_label_set_text(label, "HELLO!");
-  lv_obj_set_style_text_color(label, lv_color_hex(0xFF0000), LV_PART_MAIN);
-  lv_obj_set_style_text_font(label, &lv_font_montserrat_24, LV_PART_MAIN);
-  lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
-
-  printk("ui_init done\n");
+    if (index == -1)
+    {
+        return 0;
+    }
+    return ((lv_obj_t **)&objects)[index];
 }
 
-void ui_tick(void)
+void loadScreen(enum ScreensEnum screenId)
 {
+    currentScreen = screenId - 1;
+    lv_obj_t *screen = getLvglObjectFromIndex(currentScreen);
+    lv_scr_load_anim(screen, LV_SCR_LOAD_ANIM_FADE_IN, 200, 0, false);
+}
+
+void ui_init()
+{
+    create_screens();
+    loadScreen(SCREEN_ID_MAIN);
+}
+
+void ui_tick()
+{
+    tick_screen(currentScreen);
 }

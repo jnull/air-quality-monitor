@@ -1,21 +1,22 @@
-#ifndef EEZ_LVGL_UI_H
-#define EEZ_LVGL_UI_H
+#ifndef EEZ_LVGL_UI_GUI_H
+#define EEZ_LVGL_UI_GUI_H
+
+#include <lvgl.h>
+
+#include "screens.h"
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-  /*
-   * This file is a placeholder.
-   * EEZ Studio will generate the real ui.h / ui.c into src/ui/
-   * when you export the project. Do not edit manually.
-   */
-  void ui_init(void);
-  void ui_tick(void);
+  void ui_init();
+  void ui_tick();
+
+  void loadScreen(enum ScreensEnum screenId);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* EEZ_LVGL_UI_H */
+#endif // EEZ_LVGL_UI_GUI_H

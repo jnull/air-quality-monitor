@@ -6,6 +6,9 @@ target_sources(app PRIVATE
     src/main.c
     src/sgp30.c
     src/ui/ui.c
+    src/ui/images.c
+    src/ui/screens.c
+    src/ui/styles.c
 )
 
 # EEZ Studio generates files into src/ui/ — make it includable
