@@ -48,17 +48,19 @@ void create_screen_main() {
                     // label_title
                     lv_obj_t *obj = lv_label_create(parent_obj);
                     objects.label_title = obj;
-                    lv_obj_set_pos(obj, 5, 9);
+                    lv_obj_set_pos(obj, 12, 9);
                     lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+                    lv_obj_set_style_text_align(obj, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
                     lv_label_set_text(obj, "Air Quality Monitor");
                 }
                 {
                     // label_uptime
                     lv_obj_t *obj = lv_label_create(parent_obj);
                     objects.label_uptime = obj;
-                    lv_obj_set_pos(obj, 279, 3);
+                    lv_obj_set_pos(obj, 210, 9);
                     lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-                    lv_label_set_text(obj, "Text");
+                    lv_obj_set_style_text_align(obj, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
+                    lv_label_set_text(obj, "00:00:00");
                 }
             }
         }
@@ -98,6 +100,7 @@ void create_screen_main() {
                             objects.label_eco2_titel = obj;
                             lv_obj_set_pos(obj, 61, 4);
                             lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+                            lv_obj_set_style_text_align(obj, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
                             lv_label_set_text(obj, "eCO2");
                         }
                         {
@@ -106,6 +109,7 @@ void create_screen_main() {
                             objects.label_eco2_value = obj;
                             lv_obj_set_pos(obj, 47, 20);
                             lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+                            lv_obj_set_style_text_align(obj, LV_TEXT_ALIGN_RIGHT, LV_PART_MAIN | LV_STATE_DEFAULT);
                             lv_label_set_text(obj, "Text");
                         }
                         {
@@ -114,6 +118,7 @@ void create_screen_main() {
                             objects.label_eco2_unit = obj;
                             lv_obj_set_pos(obj, 81, 20);
                             lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+                            lv_obj_set_style_text_align(obj, LV_TEXT_ALIGN_LEFT, LV_PART_MAIN | LV_STATE_DEFAULT);
                             lv_label_set_text(obj, "Text");
                         }
                         {
@@ -147,6 +152,7 @@ void create_screen_main() {
                             objects.label_tvoc_titel = obj;
                             lv_obj_set_pos(obj, 60, 4);
                             lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+                            lv_obj_set_style_text_align(obj, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
                             lv_label_set_text(obj, "TVOC");
                         }
                         {
@@ -155,6 +161,7 @@ void create_screen_main() {
                             objects.label_tvoc_value = obj;
                             lv_obj_set_pos(obj, 46, 20);
                             lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+                            lv_obj_set_style_text_align(obj, LV_TEXT_ALIGN_RIGHT, LV_PART_MAIN | LV_STATE_DEFAULT);
                             lv_label_set_text(obj, "Text");
                         }
                         {
@@ -163,6 +170,7 @@ void create_screen_main() {
                             objects.label_tvoc_unit = obj;
                             lv_obj_set_pos(obj, 81, 20);
                             lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+                            lv_obj_set_style_text_align(obj, LV_TEXT_ALIGN_LEFT, LV_PART_MAIN | LV_STATE_DEFAULT);
                             lv_label_set_text(obj, "Text");
                         }
                         {
@@ -194,16 +202,18 @@ void create_screen_main() {
                             // label_status_titel
                             lv_obj_t *obj = lv_label_create(parent_obj);
                             objects.label_status_titel = obj;
-                            lv_obj_set_pos(obj, 56, 9);
+                            lv_obj_set_pos(obj, 106, 9);
                             lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+                            lv_obj_set_style_text_align(obj, LV_TEXT_ALIGN_RIGHT, LV_PART_MAIN | LV_STATE_DEFAULT);
                             lv_label_set_text(obj, "Status:");
                         }
                         {
                             // label_status
                             lv_obj_t *obj = lv_label_create(parent_obj);
                             objects.label_status = obj;
-                            lv_obj_set_pos(obj, 226, 9);
+                            lv_obj_set_pos(obj, 165, 9);
                             lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+                            lv_obj_set_style_text_align(obj, LV_TEXT_ALIGN_LEFT, LV_PART_MAIN | LV_STATE_DEFAULT);
                             lv_label_set_text(obj, "Text");
                         }
                     }

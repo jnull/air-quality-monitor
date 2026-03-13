@@ -6,14 +6,13 @@
 #include "screens.h"
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
-  void ui_init();
-  void ui_tick();
+void ui_init();
+void ui_tick();
 
-  void loadScreen(enum ScreensEnum screenId);
+void loadScreen(enum ScreensEnum screenId);
 
 #ifdef __cplusplus
 }
