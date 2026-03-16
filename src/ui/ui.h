@@ -6,13 +6,21 @@
 #include "screens.h"
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
-void ui_init();
-void ui_tick();
+  void ui_init();
+  void ui_tick();
 
-void loadScreen(enum ScreensEnum screenId);
+  void loadScreen(enum ScreensEnum screenId);
+
+  /*
+   * Update the internal screen-index tracker without triggering an animation.
+   * Call this from main.c after every navigate_to() transition so that
+   * ui_tick() keeps ticking the correct screen's tick function.
+   */
+  void ui_set_screen(enum ScreensEnum screenId);
 
 #ifdef __cplusplus
 }
